@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    build: ./server
+    links: 
+      - redis
+      - mongo
+    ports:
+      - '3000:3000'
+    volumes: 
+      - ./server:/app/
+    depends_on:
+      - redis
+      - mongo
+    command: "npm start"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  mongo:    
+    image: mongo
+    ports:
+      - "27017:27017"
+  frontend:
+    build: ./cliente
+    links: 
+      - app
+    depends_on:
+      - app
+    ports:
+      - "80:4200"
+    volumes: 
+      - ./cliente:/app/
+    command: "npm start"
+  
